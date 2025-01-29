@@ -2458,9 +2458,9 @@ void Adafruit_SPITFT::SPI_WRITE16(uint16_t w) {
     spi_write_blocking(pi_spi, (uint8_t *)&w, 2);
 #elif defined(ARDUINO_ARCH_RTTHREAD)
     hwspi._spi->transfer16(w);
-// #elif defined(ARDUINO_ARCH_STM32)
-//     swapBytes(&w,1,&w);
-//     hwspi._spi->transfer(w,2);
+#elif defined(ARDUINO_ARCH_STM32)
+    // w = __builtin_bswap16(w);
+    hwspi._spi->transfer((uint8_t *)&w,2);
 #else
     // MSB, LSB because TFTs are generally big-endian
     hwspi._spi->transfer(w >> 8);
