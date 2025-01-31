@@ -1047,6 +1047,11 @@ void Adafruit_SPITFT::writePixels(uint16_t *colors, uint32_t len, bool block,
     swapBytes(colors, len); // big-to-little endian to restore pixel buffer
   }
   return;
+#elif defined(ARDUINO_ARCH_STM32)
+
+  // pass through the SPI driver
+  hwspi._spi->transfer( (uint8_t *)colors, len * 2);
+  return;
 #elif defined(USE_SPI_DMA) &&                                                  \
     (defined(__SAMD51__) || defined(ARDUINO_SAMD_ZERO))
   if ((connection == TFT_HARD_SPI) || (connection == TFT_PARALLEL)) {
